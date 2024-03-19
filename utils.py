@@ -1,7 +1,33 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import pearsonr,zscore
 
+def p_eng(eng11,eng22,n1,n2):
+
+    p1=np.zeros(len(eng11))
+    p2=np.zeros(len(eng11))
+    for i, aa in enumerate(zip(eng11,eng22)):
+        eng1, eng2 = aa
+        p=(eng1+eng2)/(n1+n2)
+        k1=eng1
+        k2=eng2
+        p1[i] = scipy.stats.hypergeom.cdf(k1, n1+n2, eng1+eng2, n1)
+        #scipy.stats.norm.cdf((k1-n1*p)/np.sqrt(n1*p*(1-p)))
+        p2[i] = scipy.stats.hypergeom.cdf(k2, n1+n2, eng1+eng2, n2)
+    return p1,p2
+
+def corrATM(A,B):
+    if len(A)==len(A.T):
+        nreg=len(A)
+        nedg=int(nreg*nreg)
+        mask=np.identity(nreg)
+        exclude_ids=np.where(mask.flatten()==1)[0]
+        right_ids=np.delete(np.arange(nedg),exclude_ids)
+        return abs(pearsonr(A.flatten()[right_ids],B.flatten()[right_ids])[0])
+    else:
+        return abs(pearsonr(A.flatten(),B.flatten())[0])
+    
 def shifting(x, n=None):
     
     if n==None:
@@ -170,3 +196,4 @@ def extract_amplitude(
 
 
     return raw
+
