@@ -123,6 +123,15 @@ def bars_diff(p, bottom, top,x1=1, x2=2, height=1):
     plt.text((x1 + x2) * 0.5, text_height, sig_symbol, ha='center', c='k')
     #plt.ylim((-0.24,0.44))
 
+def go_edge(tseries):
+    nregions=tseries.shape[1]
+    Blen=tseries.shape[0]
+    nedges=int(nregions**2/2-nregions/2)
+    iTriup= np.triu_indices(nregions,k=1) 
+    gz=stats.zscore(tseries)
+    Eseries = gz[:,iTriup[0]]*gz[:,iTriup[1]]
+    
+    return Eseries
     
 def Gtest(a,b,N=5000):
     nsubs=len(a)
